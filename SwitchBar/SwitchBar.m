@@ -58,7 +58,7 @@
         }else{
             _selIndex = selIndex;
         }
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
+        [self setNeedsDisplay];
     }
 }
 
@@ -67,7 +67,7 @@
     for(int i=0;i<_titles.count;i++){
         [self drawTitleAtIndex:i];
         [self drawUnderlineAtIndex:i];
-
+        
     }
 }
 
@@ -94,7 +94,7 @@
     NSString* title = _titles[index];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-
+    
     NSMutableParagraphStyle* textStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
     textStyle.alignment = NSTextAlignmentCenter;
     
@@ -130,8 +130,7 @@
         int i = touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
         
         self.selIndex = i;
-        [self setNeedsDisplay];
-        
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
     
 }
