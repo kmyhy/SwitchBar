@@ -81,7 +81,7 @@
     
     UIBezierPath* linePath = [UIBezierPath bezierPath];
     [linePath moveToPoint: origin];
-    [linePath addLineToPoint: CGPointMake(origin.x+itemWidth, origin.y)];
+    [linePath addLineToPoint: CGPointMake(origin.x+itemWidth-2, origin.y)];
     linePath.lineCapStyle = kCGLineCapSquare;
     
     [selected?_selUnderlineColor:_normalUnderlineColor setStroke];
