@@ -32,7 +32,7 @@
 -(void)setup{
     self.fontSize = 14.0;
     self.normalTitleColor = [UIColor colorWithRed:0x43/255.0 green:0x43/255.0 blue:0x43/255.0 alpha:1];
-    self.selTitleColor = [UIColor colorWithRed:0x1d/255.0 green:0xc2/255.0 blue:0xc0/255.0 alpha:1];
+    self.selTitleColor = [UIColor colorWithRed:0xfa/255.0 green:0x50/255.0 blue:0x42/255.0 alpha:1];
     self.normalUnderlineColor = [UIColor colorWithRed:0xe8/255.0 green:0xe8/255.0 blue:0xe8/255.0 alpha:1];
     self.selUnderlineColor = _selTitleColor;
     
@@ -48,6 +48,7 @@
     self.splitterVisible = YES;// 是否显示分割线
     self.splitterWidth = 2;
     self.splitterColor = [UIColor colorWithRed:0xf4/255.0 green:0xf4/255.0 blue:0xf4/255.0 alpha:1];
+    self.selUnderlineWidthAlignToText = NO;
 }
 -(void)setSelIndex:(NSInteger)selIndex{
     if(selIndex != _selIndex){
@@ -66,27 +67,66 @@
     
     for(int i=0;i<_titles.count;i++){
         [self drawTitleAtIndex:i];
-        [self drawUnderlineAtIndex:i];
-        
+
     }
 }
 
--(void)drawUnderlineAtIndex:(NSInteger)index{
+-(void)drawUnderlineAtIndex:(NSInteger)index width:(CGFloat)width{
     
     BOOL selected = index==_selIndex;
     
     CGFloat itemWidth = CGRectGetWidth(self.frame)/_titles.count;
     
-    CGPoint origin = CGPointMake(index*itemWidth, (_textTopOffset+_textMaxHeight+_underlineTopOffset)-(selected?_selUnderlineWidth/[UIScreen mainScreen].scale:_normalUnderlineWidth/[UIScreen mainScreen].scale)/2);
+    CGPoint origin = CGPointMake(index*itemWidth, (_textTopOffset+_textMaxHeight+_underlineTopOffset+2)-(selected?_selUnderlineWidth/[UIScreen mainScreen].scale:_normalUnderlineWidth/[UIScreen mainScreen].scale)/2);
+    
+    CGFloat endX = 0;
+    
+//    if(selected && _selUnderlineWidthAlignToText){
+//        
+//    }
     
     UIBezierPath* linePath = [UIBezierPath bezierPath];
     [linePath moveToPoint: origin];
-    [linePath addLineToPoint: CGPointMake(origin.x+itemWidth-2, origin.y)];
+    
+//    if(selected && _selUnderlineWidthAlignToText){
+//        
+
+//    }
+    
+    endX = origin.x+itemWidth-2;
+    
+    [linePath addLineToPoint: CGPointMake(endX, origin.y)];
     linePath.lineCapStyle = kCGLineCapSquare;
     
-    [selected?_selUnderlineColor:_normalUnderlineColor setStroke];
-    linePath.lineWidth = selected?_selUnderlineWidth/[UIScreen mainScreen].scale:_normalUnderlineWidth/[UIScreen mainScreen].scale;
+//    if(selected && _selUnderlineWidthAlignToText){
+//        [_selUnderlineColor setStroke];
+//    }
+    [_normalUnderlineColor setStroke];
+    
+//    if(selected && _selUnderlineWidthAlignToText){
+//        linePath.lineWidth = _selUnderlineWidth/[UIScreen mainScreen].scale;
+//    }
+    linePath.lineWidth = _normalUnderlineWidth/[UIScreen mainScreen].scale;
     [linePath stroke];
+    
+    if(selected){ // 绘制加粗的选中下划线
+        if(_selUnderlineWidthAlignToText){
+            CGFloat offset = index*(itemWidth-1)+(itemWidth-width)/2;
+            origin = CGPointMake(offset, (_textTopOffset+_textMaxHeight+_underlineTopOffset+2)-_selUnderlineWidth/[UIScreen mainScreen].scale);
+
+            endX = origin.x + width;
+
+        }
+        
+        UIBezierPath* linePath = [UIBezierPath bezierPath];
+        [linePath moveToPoint: origin];
+        [linePath addLineToPoint: CGPointMake(endX, origin.y)];
+        linePath.lineCapStyle = kCGLineCapSquare;
+        [_selUnderlineColor setStroke];
+        
+        linePath.lineWidth = _selUnderlineWidth/[UIScreen mainScreen].scale;
+        [linePath stroke];
+    }
 }
 -(void)drawTitleAtIndex:(NSInteger)index{
     BOOL selected = index==_selIndex;
@@ -94,20 +134,22 @@
     NSString* title = _titles[index];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
+
     NSMutableParagraphStyle* textStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
     textStyle.alignment = NSTextAlignmentCenter;
     
     NSDictionary* textFontAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize: _fontSize], NSForegroundColorAttributeName: selected?_selTitleColor:_normalTitleColor, NSParagraphStyleAttributeName: textStyle};
     
-    CGFloat textHeight = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size.height;
-    
-    CGRect textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textHeight/2, itemWidth, textHeight);
+    CGSize textSize = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
+        
+    CGRect textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
     
     CGContextSaveGState(context);
     CGContextClipToRect(context, textRect);
     [title drawInRect: textRect withAttributes: textFontAttributes];
     CGContextRestoreGState(context);
+    
+    [self drawUnderlineAtIndex:index width:textSize.width];// 绘制下划线
     
     // 绘制分隔线
     if(_splitterVisible && index>0){
@@ -129,8 +171,17 @@
         
         int i = touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
         
-        self.selIndex = i;
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
+        if(i != self.selIndex){
+            if(i <= 0){
+                self.selIndex = 0;
+            }else if(i >= _titles.count){
+                self.selIndex = _titles.count -1;
+            }else{
+                self.selIndex = i;
+            }
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
+        }
+        
     }
     
 }

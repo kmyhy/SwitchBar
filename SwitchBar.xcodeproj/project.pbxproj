@@ -7,16 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1240C6941E9C69C20095700E /* SwitchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1240C6931E9C69C20095700E /* SwitchBar.m */; };
+		1240C6971E9C6AE30095700E /* SwitchViewControllerBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1240C6961E9C6AE30095700E /* SwitchViewControllerBar.m */; };
 		12523DB01E5A80980086DB17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 12523DAF1E5A80980086DB17 /* main.m */; };
 		12523DB31E5A80980086DB17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 12523DB21E5A80980086DB17 /* AppDelegate.m */; };
 		12523DB61E5A80980086DB17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12523DB51E5A80980086DB17 /* ViewController.m */; };
 		12523DB91E5A80980086DB17 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12523DB71E5A80980086DB17 /* Main.storyboard */; };
 		12523DBB1E5A80980086DB17 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12523DBA1E5A80980086DB17 /* Assets.xcassets */; };
 		12523DBE1E5A80980086DB17 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12523DBC1E5A80980086DB17 /* LaunchScreen.storyboard */; };
-		12523DC71E5A80AA0086DB17 /* SwitchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 12523DC61E5A80AA0086DB17 /* SwitchBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1240C6921E9C69C20095700E /* SwitchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchBar.h; sourceTree = "<group>"; };
+		1240C6931E9C69C20095700E /* SwitchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchBar.m; sourceTree = "<group>"; };
+		1240C6951E9C6AE30095700E /* SwitchViewControllerBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchViewControllerBar.h; sourceTree = "<group>"; };
+		1240C6961E9C6AE30095700E /* SwitchViewControllerBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchViewControllerBar.m; sourceTree = "<group>"; };
 		12523DAB1E5A80980086DB17 /* SwitchBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12523DAF1E5A80980086DB17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		12523DB11E5A80980086DB17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -27,8 +32,6 @@
 		12523DBA1E5A80980086DB17 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12523DBD1E5A80980086DB17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		12523DBF1E5A80980086DB17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12523DC51E5A80AA0086DB17 /* SwitchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchBar.h; sourceTree = "<group>"; };
-		12523DC61E5A80AA0086DB17 /* SwitchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchBar.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,9 +65,11 @@
 			isa = PBXGroup;
 			children = (
 				12523DB11E5A80980086DB17 /* AppDelegate.h */,
-				12523DC51E5A80AA0086DB17 /* SwitchBar.h */,
-				12523DC61E5A80AA0086DB17 /* SwitchBar.m */,
 				12523DB21E5A80980086DB17 /* AppDelegate.m */,
+				1240C6921E9C69C20095700E /* SwitchBar.h */,
+				1240C6931E9C69C20095700E /* SwitchBar.m */,
+				1240C6951E9C6AE30095700E /* SwitchViewControllerBar.h */,
+				1240C6961E9C6AE30095700E /* SwitchViewControllerBar.m */,
 				12523DB41E5A80980086DB17 /* ViewController.h */,
 				12523DB51E5A80980086DB17 /* ViewController.m */,
 				12523DB71E5A80980086DB17 /* Main.storyboard */,
@@ -156,7 +161,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				12523DB61E5A80980086DB17 /* ViewController.m in Sources */,
-				12523DC71E5A80AA0086DB17 /* SwitchBar.m in Sources */,
+				1240C6941E9C69C20095700E /* SwitchBar.m in Sources */,
+				1240C6971E9C6AE30095700E /* SwitchViewControllerBar.m in Sources */,
 				12523DB31E5A80980086DB17 /* AppDelegate.m in Sources */,
 				12523DB01E5A80980086DB17 /* main.m in Sources */,
 			);
@@ -313,6 +319,7 @@
 				12523DC41E5A80980086DB17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

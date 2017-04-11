@@ -27,4 +27,5 @@ IB_DESIGNABLE
 @property(assign,nonatomic)IBInspectable BOOL splitterVisible;
 @property(assign,nonatomic)IBInspectable CGFloat splitterWidth;
 @property(strong,nonatomic)IBInspectable UIColor* splitterColor;
+@property(assign,nonatomic)IBInspectable BOOL selUnderlineWidthAlignToText;//选中时下划线对齐标题文本宽度
 @end
