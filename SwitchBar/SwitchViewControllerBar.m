@@ -49,7 +49,7 @@
             return;
         }
         
-        if(self.delegate.childViewControllers.count == 0 || to==from){// 第一次显示(或者要切换的两个视图是同一个)，不需要转换动画
+        if(self.delegate.childViewControllers.count == 0){// 第一次显示(或者要切换的两个视图是同一个)，不需要转换动画
             toVC.view.frame = CGRectMake(0,0, containerView.frame.size.width, containerView.frame.size.height);
             [self.delegate addChildViewController:toVC];
             [containerView addSubview:toVC.view];
