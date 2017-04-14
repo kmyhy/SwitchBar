@@ -1,4 +1,4 @@
-#一个 iOS 自定义的 Switch 控件
+# 一个 iOS 自定义的 Switch 控件
 
 ## 简介
 
@@ -16,7 +16,7 @@
 
 	#import "SwitchViewControllerBar.h"
 
-###设置 UI
+### 设置 UI
 
 在故事版中，拖入一个 UIView，设置 Class 为 SwitchBar。
 为这个 SwitchBar 创建一个 IBOutlet 连接，比如
@@ -25,7 +25,7 @@
 	
 在拖入一个普通的 UIView，作为你的子 ViewController 的容器视图，并布局其位置和大小使其符合你要展示的子控制器大小。例如上图中的红色方块即是容器视图所在。为这个 UIView 创建一个 IBOutlet，并进行适当的命名，比如命名为 placeholderView。
 
-###初始化 switchBar
+### 初始化 switchBar
 
 初始化 SwitchBar 的 items：
 
