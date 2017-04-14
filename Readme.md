@@ -24,6 +24,7 @@
 	@property (weak, nonatomic) IBOutlet SwitchViewControllerBar *switchBar;
 	
 在拖入一个普通的 UIView，作为你的子 ViewController 的容器视图，并布局其位置和大小使其符合你要展示的子控制器大小。例如上图中的红色方块即是容器视图所在。为这个 UIView 创建一个 IBOutlet，并进行适当的命名，比如命名为 placeholderView。
+
 ###初始化 switchBar
 
 初始化 SwitchBar 的 items：
@@ -35,6 +36,7 @@
 ```
 
 首先指定了子控制器的两个标题，然后设置 delegate 属性为当前 View Controller。最后，将第一个子控制器作为默认显示的子控制器。
+
 ### 实现 SwitchViewControllerBarDelegate 协议
 
 代码：
@@ -63,6 +65,7 @@
 
 1. 用这个委托方法指定子控制器将放在哪个容器视图中显示。这里返回了我们在 IB 中创建的 placeholderView。
 2. 这个方法根据子控制器索引，返回对应的子控制器。例如，第一个子控制器返回一个灰色背景的 UIViewController，第二个子控制器则返回一个红色背景的 UIViewController。
+
 ### 自定义属性
 
 SwitchViewControllerBar 是 SwitchBar 的子类，继承了 SwitchBar 的以下属性：
