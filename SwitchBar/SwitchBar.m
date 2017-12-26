@@ -7,6 +7,7 @@
 //
 
 #import "SwitchBar.h"
+#import "UIColor+Hex.h"
 
 @implementation SwitchBar
 -(instancetype)initWithCoder:(NSCoder *)aDecoder{
@@ -49,6 +50,30 @@
     self.splitterWidth = 2;
     self.splitterColor = [UIColor colorWithRed:0xf4/255.0 green:0xf4/255.0 blue:0xf4/255.0 alpha:1];
     self.selUnderlineWidthAlignToText = NO;
+    
+    self.advancedMode = NO;
+    self.underlineVisible = YES;// 默认下划线可见
+    self.textAlignToLeft = NO; // 默认文字不左对齐（中对齐）
+    self.textAlignToLeftPadding = 32;// 默认文字左对齐间距 0
+    self.bigFontSize = self.fontSize;// 默认大小字体一致
+    
+}
+-(void)setAdvancedMode:(BOOL)advancedMode{
+    _advancedMode = advancedMode;
+    if(advancedMode){
+        _underlineVisible = NO;
+        _textAlignToLeft = YES;
+        _textAlignToLeftPadding = 13;
+        _bigFontSize = 28;
+        _selTitleColor = [UIColor blackColor];
+        _normalTitleColor = [UIColor colorWithHex:0x868686];
+        _fontSize = 16;
+    }else{
+        self.underlineVisible = YES;// 默认下划线可见
+        self.textAlignToLeft = NO; // 默认文字不左对齐（中对齐）
+        self.textAlignToLeftPadding = 0;// 默认文字左对齐间距 0
+        self.bigFontSize = self.fontSize;// 默认大小字体一致
+    }
 }
 -(void)setSelIndex:(NSInteger)selIndex{
     if(selIndex != _selIndex){
@@ -64,10 +89,10 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    
+    textFrames = [NSMutableArray new];
+    lastTextOffset = 0;
     for(int i=0;i<_titles.count;i++){
         [self drawTitleAtIndex:i];
-
     }
 }
 
@@ -130,7 +155,8 @@
 }
 -(void)drawTitleAtIndex:(NSInteger)index{
     BOOL selected = index==_selIndex;
-    CGFloat itemWidth = CGRectGetWidth(self.frame)/_titles.count;
+    CGFloat itemWidth = 0;
+    itemWidth=CGRectGetWidth(self.frame)/_titles.count;
     NSString* title = _titles[index];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -138,18 +164,39 @@
     NSMutableParagraphStyle* textStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
     textStyle.alignment = NSTextAlignmentCenter;
     
-    NSDictionary* textFontAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize: _fontSize], NSForegroundColorAttributeName: selected?_selTitleColor:_normalTitleColor, NSParagraphStyleAttributeName: textStyle};
+    UIFont* font = [UIFont systemFontOfSize:_fontSize];
+    if(_advancedMode){
+        font = selected?[UIFont boldSystemFontOfSize:_bigFontSize]:[UIFont systemFontOfSize:_fontSize];
+    }
+    NSDictionary* textFontAttributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: selected?_selTitleColor:_normalTitleColor, NSParagraphStyleAttributeName: textStyle};
     
-    CGSize textSize = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
-        
-    CGRect textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
     
+    CGSize textSize = CGSizeZero;
+    CGRect textRect = CGRectZero;
+    
+    if(self.textAlignToLeft){// 文字左对齐
+        textSize = [title boundingRectWithSize: CGSizeMake(CGFLOAT_MAX, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
+        itemWidth = textSize.width+self.textAlignToLeftPadding*2;
+        textRect = CGRectMake(lastTextOffset, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
+        lastTextOffset = CGRectGetMaxX(textRect);
+    }else{// 文字中对齐
+        textSize = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
+         textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
+    }
+    
+    [textFrames addObject:[NSValue valueWithCGRect:textRect]];
+    
+    if(self.textAlignToLeftPadding){
+        textRect = CGRectMake(textRect.origin.x+self.textAlignToLeftPadding, textRect.origin.y, textRect.size.width-self.textAlignToLeftPadding*2, textRect.size.height);
+    }
     CGContextSaveGState(context);
     CGContextClipToRect(context, textRect);
     [title drawInRect: textRect withAttributes: textFontAttributes];
     CGContextRestoreGState(context);
     
-    [self drawUnderlineAtIndex:index width:textSize.width];// 绘制下划线
+    if(self.underlineVisible){
+        [self drawUnderlineAtIndex:index width:textSize.width];// 绘制下划线
+    }
     
     // 绘制分隔线
     if(_splitterVisible && index>0){
@@ -169,7 +216,16 @@
     if(touches.count == 1){
         CGPoint touchPos = [[touches anyObject] locationInView:self];
         
-        int i = touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
+        int i = 0;//touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
+        
+        for(int j=0;j<textFrames.count;j++){
+            NSValue *value = textFrames[j];
+            CGRect rect = [value CGRectValue];
+            if(CGRectContainsPoint(rect, touchPos)){
+                i = j;
+                break;
+            }
+        }
         
         if(i != self.selIndex){
             if(i <= 0){

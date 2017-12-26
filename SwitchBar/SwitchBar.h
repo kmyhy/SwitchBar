@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 
 IB_DESIGNABLE
-@interface SwitchBar : UIControl
+@interface SwitchBar : UIControl{
+    NSMutableArray* textFrames;
+    CGFloat lastTextOffset;
+}
 @property(assign,nonatomic)IBInspectable CGFloat fontSize;
 @property(strong,nonatomic)IBInspectable UIColor* normalTitleColor;
 @property(strong,nonatomic)IBInspectable UIColor* selTitleColor;
@@ -28,4 +31,13 @@ IB_DESIGNABLE
 @property(assign,nonatomic)IBInspectable CGFloat splitterWidth;
 @property(strong,nonatomic)IBInspectable UIColor* splitterColor;
 @property(assign,nonatomic)IBInspectable BOOL selUnderlineWidthAlignToText;//选中时下划线对齐标题文本宽度
+
+// 大小字模式特殊样式专用属性
+@property(assign,nonatomic)IBInspectable BOOL advancedMode;// 是否使用大小字模式
+@property(assign,nonatomic) BOOL underlineVisible;// 下划线是否可见
+@property(assign,nonatomic) BOOL textAlignToLeft;// 文字左对齐
+@property(assign,nonatomic) CGFloat textAlignToLeftPadding;// 文字左对齐边距
+@property(assign,nonatomic) CGFloat bigFontSize;// 大字字号
+
+
 @end

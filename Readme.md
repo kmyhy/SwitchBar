@@ -4,7 +4,11 @@
 
 一个 iOS 自定义 Switch 开关控件，提供简单的文字-下划线选择风格：
 
-<img src='1.png' width=300/>
+<img src="1.png" width="300"/>
+
+也提供另外一种大小字的样式：
+
+<img src="2.png" width="300"/>
 
 特点：用法简单，初始化一个 SwitchViewControllerBar 然后在你的 View Controller 中实现两个 SwitchViewControllerBarDelegate 委托方法。
 
@@ -88,6 +92,7 @@ SwitchViewControllerBar 是 SwitchBar 的子类，继承了 SwitchBar 的以下�
 * splitterWidth：分割线粗细;
 * splitterColor：分割线颜色;
 * selUnderlineWidthAlignToText:选中时下划线是否和标题宽度对齐，默认为 NO;
+* advancedMode:默认为 NO，设置为 YES 时提供一种大小字样式，即选中状态时文字为大写加粗字体，未选中状态时为小写正常字体。
 	
 ### Demo
 

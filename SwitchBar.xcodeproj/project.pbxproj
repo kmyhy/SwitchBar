@@ -15,6 +15,7 @@
 		12523DB91E5A80980086DB17 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12523DB71E5A80980086DB17 /* Main.storyboard */; };
 		12523DBB1E5A80980086DB17 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12523DBA1E5A80980086DB17 /* Assets.xcassets */; };
 		12523DBE1E5A80980086DB17 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12523DBC1E5A80980086DB17 /* LaunchScreen.storyboard */; };
+		128B324C1FF2353E0099EC41 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 128B324B1FF2353E0099EC41 /* UIColor+Hex.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		12523DBA1E5A80980086DB17 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12523DBD1E5A80980086DB17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		12523DBF1E5A80980086DB17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		128B324A1FF2353E0099EC41 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
+		128B324B1FF2353E0099EC41 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +69,8 @@
 			children = (
 				12523DB11E5A80980086DB17 /* AppDelegate.h */,
 				12523DB21E5A80980086DB17 /* AppDelegate.m */,
+				128B324A1FF2353E0099EC41 /* UIColor+Hex.h */,
+				128B324B1FF2353E0099EC41 /* UIColor+Hex.m */,
 				1240C6921E9C69C20095700E /* SwitchBar.h */,
 				1240C6931E9C69C20095700E /* SwitchBar.m */,
 				1240C6951E9C6AE30095700E /* SwitchViewControllerBar.h */,
@@ -161,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12523DB61E5A80980086DB17 /* ViewController.m in Sources */,
+				128B324C1FF2353E0099EC41 /* UIColor+Hex.m in Sources */,
 				1240C6941E9C69C20095700E /* SwitchBar.m in Sources */,
 				1240C6971E9C6AE30095700E /* SwitchViewControllerBar.m in Sources */,
 				12523DB31E5A80980086DB17 /* AppDelegate.m in Sources */,
