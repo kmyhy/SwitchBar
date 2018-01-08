@@ -7,7 +7,6 @@
 //
 
 #import "SwitchBar.h"
-#import "UIColor+Hex.h"
 
 @implementation SwitchBar
 -(instancetype)initWithCoder:(NSCoder *)aDecoder{
@@ -32,15 +31,19 @@
 }
 -(void)setup{
     self.fontSize = 14.0;
-    self.normalTitleColor = [UIColor colorWithRed:0x43/255.0 green:0x43/255.0 blue:0x43/255.0 alpha:1];
+
+    self.normalTitleColor = [UIColor colorWithRed:0x8a/255.0 green:0x8a/255.0 blue:0x82/255.0 alpha:1];
     self.selTitleColor = [UIColor colorWithRed:0xfa/255.0 green:0x50/255.0 blue:0x42/255.0 alpha:1];
+
+//    self.normalTitleColor = [UIColor colorWithRed:0x43/255.0 green:0x43/255.0 blue:0x43/255.0 alpha:1];
+
     self.normalUnderlineColor = [UIColor colorWithRed:0xe8/255.0 green:0xe8/255.0 blue:0xe8/255.0 alpha:1];
     self.selUnderlineColor = _selTitleColor;
     
     self.normalUnderlineWidth = 2;
     
     self.selUnderlineWidth = 4;
-    self.selIndex = 0;
+    _selIndex = -1;
     self.titles = @[@"语音通知语音",@"通知语音通知语",@"音通知语音通知",@"文字通知"];
     
     self.textTopOffset = 17; // 文字距离上边距的距离
@@ -50,30 +53,8 @@
     self.splitterWidth = 2;
     self.splitterColor = [UIColor colorWithRed:0xf4/255.0 green:0xf4/255.0 blue:0xf4/255.0 alpha:1];
     self.selUnderlineWidthAlignToText = NO;
-    
-    self.advancedMode = NO;
-    self.underlineVisible = YES;// 默认下划线可见
-    self.textAlignToLeft = NO; // 默认文字不左对齐（中对齐）
-    self.textAlignToLeftPadding = 32;// 默认文字左对齐间距 0
-    self.bigFontSize = self.fontSize;// 默认大小字体一致
-    
-}
--(void)setAdvancedMode:(BOOL)advancedMode{
-    _advancedMode = advancedMode;
-    if(advancedMode){
-        _underlineVisible = NO;
-        _textAlignToLeft = YES;
-        _textAlignToLeftPadding = 13;
-        _bigFontSize = 28;
-        _selTitleColor = [UIColor blackColor];
-        _normalTitleColor = [UIColor colorWithHex:0x868686];
-        _fontSize = 16;
-    }else{
-        self.underlineVisible = YES;// 默认下划线可见
-        self.textAlignToLeft = NO; // 默认文字不左对齐（中对齐）
-        self.textAlignToLeftPadding = 0;// 默认文字左对齐间距 0
-        self.bigFontSize = self.fontSize;// 默认大小字体一致
-    }
+    self.selBoldFont = NO;
+    self.underHairlineVisible = YES;
 }
 -(void)setSelIndex:(NSInteger)selIndex{
     if(selIndex != _selIndex){
@@ -85,14 +66,15 @@
             _selIndex = selIndex;
         }
         [self setNeedsDisplay];
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 }
 
 - (void)drawRect:(CGRect)rect {
-    textFrames = [NSMutableArray new];
-    lastTextOffset = 0;
+    
     for(int i=0;i<_titles.count;i++){
         [self drawTitleAtIndex:i];
+
     }
 }
 
@@ -111,6 +93,7 @@
 //    }
     
     UIBezierPath* linePath = [UIBezierPath bezierPath];
+    
     [linePath moveToPoint: origin];
     
 //    if(selected && _selUnderlineWidthAlignToText){
@@ -132,14 +115,16 @@
 //        linePath.lineWidth = _selUnderlineWidth/[UIScreen mainScreen].scale;
 //    }
     linePath.lineWidth = _normalUnderlineWidth/[UIScreen mainScreen].scale;
-    [linePath stroke];
+    if(_underHairlineVisible){
+        [linePath stroke];
+    }
     
     if(selected){ // 绘制加粗的选中下划线
         if(_selUnderlineWidthAlignToText){
             CGFloat offset = index*(itemWidth-1)+(itemWidth-width)/2;
             origin = CGPointMake(offset, (_textTopOffset+_textMaxHeight+_underlineTopOffset+2)-_selUnderlineWidth/[UIScreen mainScreen].scale);
 
-            endX = origin.x + width;
+            endX = origin.x + width + 4;// 加几个像素
 
         }
         
@@ -155,8 +140,7 @@
 }
 -(void)drawTitleAtIndex:(NSInteger)index{
     BOOL selected = index==_selIndex;
-    CGFloat itemWidth = 0;
-    itemWidth=CGRectGetWidth(self.frame)/_titles.count;
+    CGFloat itemWidth = CGRectGetWidth(self.frame)/_titles.count;
     NSString* title = _titles[index];
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -164,39 +148,20 @@
     NSMutableParagraphStyle* textStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
     textStyle.alignment = NSTextAlignmentCenter;
     
-    UIFont* font = [UIFont systemFontOfSize:_fontSize];
-    if(_advancedMode){
-        font = selected?[UIFont boldSystemFontOfSize:_bigFontSize]:[UIFont systemFontOfSize:_fontSize];
-    }
+    UIFont * font= (selected && _selBoldFont)?[UIFont boldSystemFontOfSize:_fontSize]:[UIFont systemFontOfSize:_fontSize];
+    
     NSDictionary* textFontAttributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: selected?_selTitleColor:_normalTitleColor, NSParagraphStyleAttributeName: textStyle};
     
+    CGSize textSize = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
+        
+    CGRect textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
     
-    CGSize textSize = CGSizeZero;
-    CGRect textRect = CGRectZero;
-    
-    if(self.textAlignToLeft){// 文字左对齐
-        textSize = [title boundingRectWithSize: CGSizeMake(CGFLOAT_MAX, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
-        itemWidth = textSize.width+self.textAlignToLeftPadding*2;
-        textRect = CGRectMake(lastTextOffset, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
-        lastTextOffset = CGRectGetMaxX(textRect);
-    }else{// 文字中对齐
-        textSize = [title boundingRectWithSize: CGSizeMake(itemWidth, _textMaxHeight)  options: NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes: textFontAttributes context: nil].size;
-         textRect = CGRectMake(index*itemWidth, _textTopOffset+_textMaxHeight/2-textSize.height/2, itemWidth, textSize.height);
-    }
-    
-    [textFrames addObject:[NSValue valueWithCGRect:textRect]];
-    
-    if(self.textAlignToLeftPadding){
-        textRect = CGRectMake(textRect.origin.x+self.textAlignToLeftPadding, textRect.origin.y, textRect.size.width-self.textAlignToLeftPadding*2, textRect.size.height);
-    }
     CGContextSaveGState(context);
     CGContextClipToRect(context, textRect);
     [title drawInRect: textRect withAttributes: textFontAttributes];
     CGContextRestoreGState(context);
     
-    if(self.underlineVisible){
-        [self drawUnderlineAtIndex:index width:textSize.width];// 绘制下划线
-    }
+    [self drawUnderlineAtIndex:index width:textSize.width];// 绘制下划线
     
     // 绘制分隔线
     if(_splitterVisible && index>0){
@@ -216,16 +181,7 @@
     if(touches.count == 1){
         CGPoint touchPos = [[touches anyObject] locationInView:self];
         
-        int i = 0;//touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
-        
-        for(int j=0;j<textFrames.count;j++){
-            NSValue *value = textFrames[j];
-            CGRect rect = [value CGRectValue];
-            if(CGRectContainsPoint(rect, touchPos)){
-                i = j;
-                break;
-            }
-        }
+        int i = touchPos.x/(CGRectGetWidth(self.frame)/_titles.count);
         
         if(i != self.selIndex){
             if(i <= 0){
@@ -235,7 +191,6 @@
             }else{
                 self.selIndex = i;
             }
-            [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
         
     }
