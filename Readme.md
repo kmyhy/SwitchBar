@@ -36,7 +36,7 @@
 ```swift
 	 _switchBar.titles = @[@"节目列表",@"专辑详情"];
     _switchBar.delegate = self;
-    [_switchBar switchTo:0];
+    _switchBar.selIndex = 0;
 ```
 
 首先指定了子控制器的两个标题，然后设置 delegate 属性为当前 View Controller。最后，将第一个子控制器作为默认显示的子控制器。

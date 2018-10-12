@@ -20,5 +20,6 @@
 IB_DESIGNABLE
 @interface SwitchViewControllerBar : SwitchBar
 @property(weak,nonatomic)UIViewController<SwitchViewControllerBarDelegate> *delegate;
--(void)switchTo:(NSInteger)to;
+@property(assign, nonatomic,setter=setSelIndex:) NSInteger selIndex;
+//-(void)switchTo:(NSInteger)to;
 @end

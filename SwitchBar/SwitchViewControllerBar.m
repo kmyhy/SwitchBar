@@ -9,11 +9,12 @@
 #import "SwitchViewControllerBar.h"
 
 @implementation SwitchViewControllerBar
-
+@synthesize selIndex=_selIndex;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder{
     self = [super initWithCoder:aDecoder];
     if(self){
-        [self initAction];
+//        [self initAction];
+        _selIndex = -1;
     }
     return self;
 }
@@ -21,7 +22,8 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if(self){
-        [self initAction];
+//        [self initAction];
+        _selIndex = -1;
     }
     return self;
 }
@@ -30,12 +32,21 @@
     self = [self initWithFrame:rect];
     return self;
 }
--(void)initAction{
-    [self addTarget:self action:@selector(valueChange:) forControlEvents:UIControlEventValueChanged];
+//-(void)initAction{
+//    [self addTarget:self action:@selector(valueChange:) forControlEvents:UIControlEventValueChanged];
+//}
+//-(void)valueChange:(SwitchViewControllerBar*)sender{
+//    [self switchTo:sender.selIndex];
+//}
+-(void)setSelIndex:(NSInteger)selIndex{
+    if(selIndex >=0  && selIndex != _selIndex){
+        [self switchTo:selIndex];
+        _selIndex = selIndex;
+        super.selIndex = selIndex;
+        [self setNeedsDisplay];
+    }
 }
--(void)valueChange:(SwitchViewControllerBar*)sender{
-    [self switchTo:sender.selIndex];
-}
+
 -(void)switchTo:(NSInteger)to{
     
     if(self.delegate){
@@ -54,7 +65,7 @@
             [self.delegate addChildViewController:toVC];
             [containerView addSubview:toVC.view];
             [toVC didMoveToParentViewController:self.delegate];
-            [self setSelIndex:to];// 这句重要！否则 title 的选中样式不会变！
+//            [self setSelIndex:to];// 这句重要！否则 title 的选中样式不会变！
         }else if(self.delegate.childViewControllers.count == 1){
             // 每次转换动画完成后，fromVC 都会被抛弃，childViewController 中只包含 toVC
             UIViewController* fromVC = self.delegate.childViewControllers[0];
@@ -94,12 +105,12 @@
                 
                 //            NSLog(@"Transition finished，subviews:%ld,childViewControllers:%ld",self.containerView.subviews.count,self.childViewControllers.count);
                 
-                [self setSelIndex:to];// 这句重要！否则 title 的选中样式不会变！
+//                [self setSelIndex:to];// 这句重要！否则 title 的选中样式不会变！
             }];
             
         }
     }else{
-        self.selIndex = to;
-    }  
+//        self.selIndex = to;
+    }
 }
 @end
